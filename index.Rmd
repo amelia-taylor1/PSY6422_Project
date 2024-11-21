@@ -32,16 +32,13 @@ library(tidyverse)
 
 # the raw dataset is an excel workbook with many sheets so for this project we're specifying one sheet to upload into R
 # so need to install packages to load one sheet from the raw dataset
-# gonna try withiut this 
 install.packages("readxl") 
 install.packages("openxlsx")
-
-# and this 
 library(readxl)
 library(openxlsx)
 
 # need to tell R the file path to choose
-file_path <- here("PSY6422_Project", "data", "ecigaretteuseingreatbritain.xlsx")
+file_path <- here("Data", "ecigaretteuseingreatbritain.xlsx")
 
 # import data using the given file path
 # as the raw dataset is so large, we're specifying which sheet in the raw dataset to use
