@@ -1,0 +1,54 @@
+---
+title: "E-cigarette use in Great Britain between 2014 and 2023"
+output: html_document
+date: "2024-11-21"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Data Origins
+This project is focused on visualising the change in e-cigarette use in Great Britain between 2014-2023. The data was found on the Office for National Statistics website, where each year the smoking habits of Great Britain are quantified in using two surveys, and a statistical bulletin is published. This data in particular has been collected over 10 years and collated by the Office for National Statistics in a statistical bulletin published on 01/10/2024.
+
+# Research Question
+### How has e-cigarette use changed since 2014?
+
+# Importing the Data
+To upload the dataset into R, I used the 'here' function as this allows the code to work on any computer which has downloaded the 'PSY6422_Project' folder. 
+As the data is an Excel workbook with a lot of sheets, I only wanted to upload and analyse a particular sheet. The one I chose was 'Table_1' as this looks at e-cigarette use in the UK by sex and age. 
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+```
+
+```{r Load the data, warning=FALSE}
+# need to load the dataset into R
+
+# first we need to install and load the required packages
+install.packages("here")
+install.packages("tidyverse")
+library(here)
+library(tidyverse)
+
+# the raw dataset is an excel workbook with many sheets so for this project we're specifying one sheet to upload into R
+# so need to install packages to load one sheet from the raw dataset
+# gonna try withiut this 
+install.packages("readxl") 
+install.packages("openxlsx")
+
+# and this 
+library(readxl)
+library(openxlsx)
+
+# need to tell R the file path to choose
+file_path <- here("PSY6422_Project", "data", "ecigaretteuseingreatbritain.xlsx")
+
+# import data using the given file path
+# as the raw dataset is so large, we're specifying which sheet in the raw dataset to use
+# we're also going to skip the first 11 rows of the sheet as this is just information about the table
+data <- read_xlsx(file_path, sheet = "Table_1", skip = 11)
+
+# view the imported data
+head(data)
+
+```
