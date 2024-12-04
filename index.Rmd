@@ -2,6 +2,16 @@
 title: "E-cigarette use in Great Britain between 2014 and 2023"
 output: html_document
 date: "2024-11-21"
+
+install.packages("prettydoc")
+library(prettydoc)
+
+output: 
+  prettydoc::html_pretty:
+    theme: leonids
+    toc: yes
+    toc_float:
+      collapsed: true
 ---
 
 ```{r setup, include=FALSE}
