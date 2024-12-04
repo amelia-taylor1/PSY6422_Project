@@ -1,61 +1,125 @@
 ---
-title: "E-cigarette use in Great Britain between 2014 and 2023"
-output: html_document
+title: "Number of convicted homicide suspects, by sex and age, between 1969 and 2023"
+author: 'Registration number: 240188795'
 date: "2024-11-21"
-
-install.packages("prettydoc")
-library(prettydoc)
-
-output: 
-  prettydoc::html_pretty:
-    theme: leonids
+output:
+  html_document:
+    theme: cosmo
     toc: yes
-    toc_float:
+    toc_float: 
       collapsed: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=FALSE, messages=FALSE, results=FALSE}
+knitr::opts_chunk$set(echo = TRUE) #to avoid error message: setting CRAN without a mirror
+options(repos = c(CRAN = "https://cran.rstudio.com/")) 
+#repos specifies the repository 
+# this URL is the designated URL for CRAN 
 ```
+
 # Data Origins
-This project is focused on visualising the change in e-cigarette use in Great Britain between 2014-2023. The data was found on the Office for National Statistics website, where each year the smoking habits of Great Britain are quantified in using two surveys, and a statistical bulletin is published. This data in particular has been collected over 10 years and collated by the Office for National Statistics in a statistical bulletin published on 01/10/2024.
+This project is focused on visualising the number of suspects convicted of homocide by the types of homocide between January 1969 and March 2023, categorised by sex and age. This visualisation allows us to compare male and female homocide convictions and see which age (in both sexes) the most homocides are convicted at.
 
 # Research Question
-### How has e-cigarette use changed since 2014?
+### Are males or females historically more likley to commit homicide?
+This visualisation aims to show a clear distinction in the different types of homocide and their trends over the years.
 
 # Importing the Data
 To upload the dataset into R, I used the 'here' function as this allows the code to work on any computer which has downloaded the 'PSY6422_Project' folder. 
-As the data is an Excel workbook with a lot of sheets, I only wanted to upload and analyse a particular sheet. The one I chose was 'Table_1' as this looks at e-cigarette use in the UK by sex and age. 
-```{r, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-options(repos = c(CRAN = "https://cran.rstudio.com/"))
-```
+As the data is an Open Document Spreadsheet with a lot of sheets, I only wanted to upload and analyse a particular sheet. The one I chose was 'Table_26' as this includes suspects for all offences initially ruled a homicide between January 1969 and March 2023. 
 
-```{r Load the data, warning=FALSE}
-# need to load the dataset into R
+```{r Load the data, warning=FALSE, message = FALSE, results=FALSE}
+# First, we need to install and load the necessary packages
 
-# first we need to install and load the required packages
 install.packages("here")
 install.packages("tidyverse")
+install.packages("readxl") 
 library(here)
 library(tidyverse)
-
-# the raw dataset is an excel workbook with many sheets so for this project we're specifying one sheet to upload into R
-# so need to install packages to load one sheet from the raw dataset
-install.packages("readxl") 
-install.packages("openxlsx")
 library(readxl)
-library(openxlsx)
 
-# need to tell R the file path to choose
-file_path <- here("Data", "ecigaretteuseingreatbritain.xlsx")
+# Now we need to tell R the file path to choose
+file_path <- here("Data", "homicideyemarch23appendixtablesfinal1.xlsx")
 
-# import data using the given file path
-# as the raw dataset is so large, we're specifying which sheet in the raw dataset to use
-# we're also going to skip the first 11 rows of the sheet as this is just information about the table
-data <- read_xlsx(file_path, sheet = "Table_1", skip = 11)
+# As the raw dataset is so large, we're specifying which sheet to use
+# We're also going to skip the first 6 rows of the sheet as this is just information about the table
 
-# view the imported data
-head(data)
+data <- read_excel(file_path, sheet = "Worksheet 31", skip = 7)
 
+# View the imported data
+
+view(data)
 ```
+
+# Cleaning the Data
+In the raw data, this worksheet shows the number of suspects convicted on different counts of homocide, but also the percentages of suspects convicted of homicide by age and sex. We do not want to include the percentage data as this is not representative unless we know the raw numbers the percentages are generated from (which we do not) so we want to remove this. We also want to remove any other unnecessary information in the dataset. For example, there are a few rows with missing values so have been filled with N/A which we need to remove. These missing values are simply from it containing only text in the raw dataset.
+
+```{r cleaning the data, warning=FALSE, message = FALSE}
+
+# First, we need to remove all of the N/A data in the dataset
+filtered_data <- data %>% drop_na() 
+
+# To check this has removed all N/A values we use the following function
+if (sum(is.na(filtered_data)) == 0) {
+  print("No missing values")
+} else {
+  print(paste("Count of total missing values:", sum(is.na(filtered_data))))
+}
+
+# Now we want to remove the percentages data
+# The percentage data begins on row 28 in the dataset so we only want to include rows 1 to 27
+filtered_data <- filtered_data[1:27, ]
+
+# View the filtered date
+view(filtered_data)
+
+# View column names
+names(filtered_data)
+
+# Rename a couple of the column names to remove the 'note...' as this is only relevant when viewing the data in Excel
+names(filtered_data)[2] <- "Age of Suspect"
+names(filtered_data)[11] <- "Apr 2020 to Mar 2021"
+```
+We remove the N/A values before specifying which rows to keep as the first row of the 'data' dataset only has N/A values, so if we removed the percentages data before we would delete the total values row of the data we're interested in. So to aid visualisation we clean the data by removing N/A values first, and then specify the rows of data we want to analyse and visualise.
+
+# Data Preparation
+As the dataset currently has a lot of columns, to be able to visualise it we need to transform it from a wide format to a long format. This is done using the 'pivot_longer' function.
+
+```{r}
+data_long <- pivot_longer(data = filtered_data, 
+                          names_to = "Year",
+                          values_to = "Values",
+                          cols = c("Apr 2012 to Mar 2013", "Apr 2013 to Mar 2014", "Apr 2014 to Mar 2015", "Apr 2015 to Mar 2016", "Apr 2016 to Mar 2017", "Apr 2017 to Mar 2018", "Apr 2018 to Mar 2019", "Apr 2019 to Mar 2020", "Apr 2020 to Mar 2021", "Apr 2021 to Mar 2022", "Apr 2022 to Mar 2023"))
+```
+
+# Visualising the Data
+```{r}
+ggplot() +
+     geom_line(data = data_long, aes(x = "Year", y = "Age of Suspect", color = "Sex of Suspect")) +
+     geom_line(data = data_long, aes(x = "Values", y = "Age of Suspect", color = "Sex of Suspect")) +
+     labs(title = "Graph of Number of Suspects Each Year by Sex and Age",
+          x = "Year",
+          y = "Age of Suspect",
+          color = "Sex of Suspect") +
+     theme_minimal()
+
+ggplot(data, aes(x = "Year", color = "Sex of Suspect", group = "Sex of Suspect")) +
+  geom_line(aes(y = "Values"), linewidth = 1) +
+  geom_point(aes(y = "Values"), linewidth = 2) +
+  geom_line(aes(y = "Age of Suspect"), linetype = "dashed", linewidth = 1) + 
+  labs(
+    title = "Number of Suspects and Age Trends by Year and Gender",
+    x = "Year",
+    y = "Number of Suspects",
+    color = "Sex of Suspect"
+  ) +
+  theme_minimal()
+
+ggplot(data, aes(x = "Year", fill = "Values")) +
+  geom_histogram(binwidth = 0.5, position = "dodge", color = "black") +
+  facet_wrap(~ "Sex of Suspect")
+```
+
+
+# References
+Office for National Statistics. (2024, February 08). *Homicide in England and Wales: year ending March 2023.* https://www.ons.gov.uk/peoplepopulationandcommunity/crimeandjustice/articles/homicideinenglandandwales/yearendingmarch2023 
