@@ -127,7 +127,7 @@ head(sex_data)
 
 ```{r}
 
-# My barplot:
+# Stacked barplot:
 sex_data$Frequency <- as.numeric(sex_data$Frequency)
 p <- ggplot(sex_data, aes(x=simple_years, y=Frequency, fill = `Sex of Suspect`)) +
   geom_bar(stat = "identity", colour='black', width = 0.75) +
@@ -157,7 +157,7 @@ p <- ggplot(sex_data, aes(x=simple_years, y=Frequency, fill = `Sex of Suspect`))
 print(p)
 ```
 ```{r}
-# My barplot:
+# My barplot - side by side bar plot:
 sex_data$Frequency <- as.numeric(sex_data$Frequency)
 p <- ggplot(sex_data, aes(x=simple_years, y=Frequency, fill = `Sex of Suspect`)) +
   geom_bar(stat = "identity", position = "dodge", colour='black', width = 0.75) +
@@ -188,40 +188,7 @@ print(p)
 ```
 
 # Visualising the Data
-```{r}
-# Need to group the data together
-final_data <- data_long %>%
-  group_by(`Sex of Suspect`, `Age of Suspect`)
 
-final_data <- data_long %>%
-  group_by(`Sex of Suspect`, `Age of Suspect`) %>%
-  summarize(Number = sum(Values, na.rm = TRUE))
-
-ggplot() +
-     geom_line(data = data_long, aes(x = "Year", y = "Age of Suspect", color = "Sex of Suspect")) +
-     geom_line(data = data_long, aes(x = "Values", y = "Age of Suspect", color = "Sex of Suspect")) +
-     labs(title = "Graph of Number of Suspects Each Year by Sex and Age",
-          x = "Year",
-          y = "Age of Suspect",
-          color = "Sex of Suspect") +
-     theme_minimal()
-
-ggplot(data, aes(x = "Year", color = "Sex of Suspect", group = "Sex of Suspect")) +
-  geom_line(aes(y = "Values"), linewidth = 1) +
-  geom_point(aes(y = "Values"), linewidth = 2) +
-  geom_line(aes(y = "Age of Suspect"), linetype = "dashed", linewidth = 1) + 
-  labs(
-    title = "Number of Suspects and Age Trends by Year and Gender",
-    x = "Year",
-    y = "Number of Suspects",
-    color = "Sex of Suspect"
-  ) +
-  theme_minimal()
-
-ggplot(data, aes(x = "Year", fill = "Values")) +
-  geom_histogram(binwidth = 0.5, position = "dodge", color = "black") +
-  facet_wrap(~ "Sex of Suspect")
-```
 
 
 # References
