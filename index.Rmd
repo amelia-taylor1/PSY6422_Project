@@ -22,10 +22,10 @@ This project is focused on visualising the number of suspects convicted of homoc
 
 # Research Question
 ### Are males or females historically more likley to commit homicide?
-This visualisation aims to show a clear distinction in the different types of homocide and their trends over the years.
+This visualisation aims to show a clear distinction in the different types of homicide and their trends over the years.
 
 # Importing the Data
-To upload the dataset into R, I used the 'here' function as this allows the code to work on any computer which has downloaded the 'PSY6422_Project' folder. 
+To upload the dataset into R, I used the 'here' function as this allows the code to work on any computer which has downloaded the 'Data' folder for this project. 
 As the data is an Open Document Spreadsheet with a lot of sheets, I only wanted to upload and analyse a particular sheet. The one I chose was 'Table_26' as this includes suspects for all offences initially ruled a homicide between January 1969 and March 2023. 
 
 ```{r Load the data, warning=FALSE, message = FALSE, results=FALSE}
@@ -33,10 +33,12 @@ As the data is an Open Document Spreadsheet with a lot of sheets, I only wanted 
 
 install.packages("here")
 install.packages("tidyverse")
+install.packages("dplyr")
 install.packages("readxl") 
 library(here)
 library(tidyverse)
 library(readxl)
+library(dplyr)
 
 # Now we need to tell R the file path to choose
 file_path <- here("Data", "homicideyemarch23appendixtablesfinal1.xlsx")
@@ -47,12 +49,11 @@ file_path <- here("Data", "homicideyemarch23appendixtablesfinal1.xlsx")
 data <- read_excel(file_path, sheet = "Worksheet 31", skip = 7)
 
 # View the imported data
-
-view(data)
+head(data)
 ```
 
 # Cleaning the Data
-In the raw data, this worksheet shows the number of suspects convicted on different counts of homocide, but also the percentages of suspects convicted of homicide by age and sex. We do not want to include the percentage data as this is not representative unless we know the raw numbers the percentages are generated from (which we do not) so we want to remove this. We also want to remove any other unnecessary information in the dataset. For example, there are a few rows with missing values so have been filled with N/A which we need to remove. These missing values are simply from it containing only text in the raw dataset.
+In the raw data, this worksheet shows the number of suspects convicted on different counts of homicide, but also the percentages of suspects convicted of homicide by age and sex. We do not want to include the percentage data as this is not representative unless we know the raw numbers the percentages are generated from (which we do not) so we want to remove this. We also want to remove any other unnecessary information in the dataset. For example, there are a few rows with missing values so have been filled with N/A which we need to remove. These missing values are simply from it containing only text in the raw dataset.
 
 ```{r cleaning the data, warning=FALSE, message = FALSE}
 
@@ -71,14 +72,18 @@ if (sum(is.na(filtered_data)) == 0) {
 filtered_data <- filtered_data[1:27, ]
 
 # View the filtered date
-view(filtered_data)
+head(filtered_data)
 
 # View column names
 names(filtered_data)
 
 # Rename a couple of the column names to remove the 'note...' as this is only relevant when viewing the data in Excel
-names(filtered_data)[2] <- "Age of Suspect"
-names(filtered_data)[11] <- "Apr 2020 to Mar 2021"
+filtered_data <- filtered_data %>% rename("Age of Suspect" = "Age of suspect [note 65]", "Apr 2020 to Mar 2021" = "Apr 2020 to Mar 2021 [note 66]") 
+
+# View column names again to see if the changes have been made
+names(filtered_data)
+# put in codebook the notes
+# separate document which references everything 
 ```
 We remove the N/A values before specifying which rows to keep as the first row of the 'data' dataset only has N/A values, so if we removed the percentages data before we would delete the total values row of the data we're interested in. So to aid visualisation we clean the data by removing N/A values first, and then specify the rows of data we want to analyse and visualise.
 
@@ -88,12 +93,110 @@ As the dataset currently has a lot of columns, to be able to visualise it we nee
 ```{r}
 data_long <- pivot_longer(data = filtered_data, 
                           names_to = "Year",
-                          values_to = "Values",
+                          values_to = "Frequency",
                           cols = c("Apr 2012 to Mar 2013", "Apr 2013 to Mar 2014", "Apr 2014 to Mar 2015", "Apr 2015 to Mar 2016", "Apr 2016 to Mar 2017", "Apr 2017 to Mar 2018", "Apr 2018 to Mar 2019", "Apr 2019 to Mar 2020", "Apr 2020 to Mar 2021", "Apr 2021 to Mar 2022", "Apr 2022 to Mar 2023"))
+
+head(data_long)
+```
+
+```{r Make 'Year' column better to visualise}
+# Create a string which has just th eyear range rather than month and year so it is easier to visualise on a graph
+
+
+```
+
+```{r Create a final datafram for the graph}
+# Create a new dataframe to use in the visualisation
+# Remove the rows which display both male and female so we can compare just male and female
+# And include all ages 
+sex_data <- data_long %>% filter(`Sex of Suspect` %in% c("Male", "Female") &
+                                  `Age of Suspect` == "Total [note 66]")
+
+sex_data <- sex_data %>%
+  mutate(
+    simple_years = paste(str_sub(Year, 5, 8), str_sub(Year, 16, 20), sep = "-") # Directly create simple_years
+  )
+
+sex_data$'Sex of Suspect' <- factor(sex_data$'Sex of Suspect', levels = c("Female", "Male"))
+levels(sex_data$'Sex of Suspect')
+
+head(sex_data)
+```
+
+# Potential Graph Functions
+
+```{r}
+
+# My barplot:
+sex_data$Frequency <- as.numeric(sex_data$Frequency)
+p <- ggplot(sex_data, aes(x=simple_years, y=Frequency, fill = `Sex of Suspect`)) +
+  geom_bar(stat = "identity", colour='black', width = 0.75) +
+  scale_y_continuous(expand = c(0,0), limits = c(0, 550)) +
+  scale_x_discrete() + 
+  scale_fill_manual(values = c("Male" = "#7A67EE", "Female" = "#FF6A6A")) +
+  ggtitle("Number of Homicide Suspects Per Year") + 
+  theme(
+    panel.background = element_rect(fill = "#BFD5E3", colour = "#6D9EC1", linetype = "solid"),
+    axis.text.x = element_text(angle = 45, hjust = 1, family = "sans"),
+    axis.text.y = element_text(family = "sans"),  # Set font for y-axis labels
+    axis.title.x = element_text(size = 14, face = "plain", family = "sans"),  # Font for x-axis title
+    axis.title.y = element_text(size = 14, face = "plain", family = "sans"),  # Font for y-axis title
+    legend.title = element_text(size = 14, face = "bold", family = "sans"),  # Font for legend title
+    legend.background = element_rect(fill = "#BFD5E3",linetype = 1, colour = "black", linewidth = 1),
+    legend.text = element_text(size = 12, family = "sans"),  # Font for legend labels
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    panel.border = element_rect(colour = "black", fill = NA, linewidth = 2)
+  ) +
+
+  labs(
+    x = "Year",        # Label for x-axis
+    y = "Number of Suspects",   # Label for y-axis
+    fill = "Sex of Suspect")  # Label for the legend
+    title = "Number of Homicide Suspects Per Year"
+
+print(p)
+```
+```{r}
+# My barplot:
+sex_data$Frequency <- as.numeric(sex_data$Frequency)
+p <- ggplot(sex_data, aes(x=simple_years, y=Frequency, fill = `Sex of Suspect`)) +
+  geom_bar(stat = "identity", position = "dodge", colour='black', width = 0.75) +
+  scale_y_continuous(expand = c(0,0), limits = c(0, 550)) +
+  scale_x_discrete() + 
+  scale_fill_manual(values = c("Male" = "#7A67EE", "Female" = "#FF6A6A")) +
+  ggtitle("Number of Homicide Suspects Per Year") + 
+  theme(
+    panel.background = element_rect(fill = "#BFD5E3", colour = "#6D9EC1", linetype = "solid"),
+    axis.text.x = element_text(angle = 45, hjust = 1, family = "sans"),
+    axis.text.y = element_text(family = "sans"),  # Set font for y-axis labels
+    axis.title.x = element_text(size = 14, face = "plain", family = "sans"),  # Font for x-axis title
+    axis.title.y = element_text(size = 14, face = "plain", family = "sans"),  # Font for y-axis title
+    legend.title = element_text(size = 14, face = "bold", family = "sans"),  # Font for legend title
+    legend.background = element_rect(fill = "#BFD5E3",linetype = 1, colour = "black", linewidth = 1),
+    legend.text = element_text(size = 12, family = "sans"),  # Font for legend labels
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    panel.border = element_rect(colour = "black", fill = NA, linewidth = 2)
+  ) +
+
+  labs(
+    x = "Year",        # Label for x-axis
+    y = "Number of Suspects",   # Label for y-axis
+    fill = "Sex of Suspect")  # Label for the legend
+    title = "Number of Homicide Suspects Per Year"
+
+print(p)
 ```
 
 # Visualising the Data
 ```{r}
+# Need to group the data together
+final_data <- data_long %>%
+  group_by(`Sex of Suspect`, `Age of Suspect`)
+
+final_data <- data_long %>%
+  group_by(`Sex of Suspect`, `Age of Suspect`) %>%
+  summarize(Number = sum(Values, na.rm = TRUE))
+
 ggplot() +
      geom_line(data = data_long, aes(x = "Year", y = "Age of Suspect", color = "Sex of Suspect")) +
      geom_line(data = data_long, aes(x = "Values", y = "Age of Suspect", color = "Sex of Suspect")) +
