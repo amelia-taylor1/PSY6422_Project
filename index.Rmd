@@ -99,7 +99,7 @@ data_long <- pivot_longer(data = filtered_data,
 head(data_long)
 ```
 
-```{r Make 'Year' column better to visualise}
+```{r Make Year column better to visualise}
 # Create a string which has just th eyear range rather than month and year so it is easier to visualise on a graph
 
 
