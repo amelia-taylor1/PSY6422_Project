@@ -1,46 +1,61 @@
 ---
-title: "Number of convicted homicide suspects, by sex and age, between 1969 and 2023"
+title: "Visualizing Homicide Convictions by Sex: Male vs. Female Suspects (2012-2023)"
 author: 'Registration number: 240188795'
-date: "2024-11-21"
+date: "2024-12-10"
 output:
   html_document:
-    theme: cosmo
-    toc: yes
-    toc_float: 
-      collapsed: true
+      self_contained: false
+      theme: cosmo
+      toc: yes
+      toc_float: 
+        collapsed: true
 ---
 
 ```{r setup, include=FALSE, messages=FALSE, results=FALSE}
 knitr::opts_chunk$set(echo = TRUE) #to avoid error message: setting CRAN without a mirror
+knitr::include_graphics("homicide_animation.gif")
 options(repos = c(CRAN = "https://cran.rstudio.com/")) 
 #repos specifies the repository 
 # this URL is the designated URL for CRAN 
+options(device = "png")
+# 
 ```
 
 # Data Origins
-This project is focused on visualising the number of suspects convicted of homocide by the types of homocide between January 1969 and March 2023, categorised by sex and age. This visualisation allows us to compare male and female homocide convictions and see which age (in both sexes) the most homocides are convicted at.
+This data was found on the Office for National Statistics website in an article titled 'Homicide in England and Wales: year ending March 2023'. The dataset is an Excel Workbook containing multiple sheets showing different homicide statistics.
+
+This project is focused on visualising the number of suspects convicted of homicide between April 2012 and March 2023, categorised by sex. This visualisation allows us to compare male and female homicide convictions and see which sex are more likely to be convicted of homicide. It also details the trend in homicide frequency over the last 10 years. 
 
 # Research Question
-### Are males or females historically more likley to commit homicide?
-This visualisation aims to show a clear distinction in the different types of homicide and their trends over the years.
+### Are males or females historically more likley to be convicted of homicide?
+This visualisation aims to show a clear distinction in the frequency of males compared to females who have been convicted of homicide. It also demonstrates the potential trend in homicide frequency in the last 10 years.
 
 # Importing the Data
 To upload the dataset into R, I used the 'here' function as this allows the code to work on any computer which has downloaded the 'Data' folder for this project. 
-As the data is an Open Document Spreadsheet with a lot of sheets, I only wanted to upload and analyse a particular sheet. The one I chose was 'Table_26' as this includes suspects for all offences initially ruled a homicide between January 1969 and March 2023. 
+As the data is an Open Document Spreadsheet with a lot of sheets, I only wanted to upload and analyse a particular sheet. The one I chose was 'Worksheet_31' as this includes suspects for all offences initially ruled a homicide between April 2012 and March 2023. 
 
-```{r Load the data, warning=FALSE, message = FALSE, results=FALSE}
+```{r Load the data, warning = FALSE, message = FALSE, results = FALSE}
 # First, we need to install and load the necessary packages
 
 install.packages("here")
 install.packages("tidyverse")
 install.packages("dplyr")
-install.packages("readxl") 
+install.packages("readxl")
+install.packages("gganimate")
+install.packages("gifski") 
+install.packages("png")
+install.packages("knitr")
 library(here)
 library(tidyverse)
 library(readxl)
 library(dplyr)
+library(gganimate)
+library(gifski)
+library(png)
+library(knitr)
 
 # Now we need to tell R the file path to choose
+
 file_path <- here("Data", "homicideyemarch23appendixtablesfinal1.xlsx")
 
 # As the raw dataset is so large, we're specifying which sheet to use
@@ -48,19 +63,22 @@ file_path <- here("Data", "homicideyemarch23appendixtablesfinal1.xlsx")
 
 data <- read_excel(file_path, sheet = "Worksheet 31", skip = 7)
 
-# View the imported data
+# View the first few rows of the imported data
+
 head(data)
 ```
 
 # Cleaning the Data
 In the raw data, this worksheet shows the number of suspects convicted on different counts of homicide, but also the percentages of suspects convicted of homicide by age and sex. We do not want to include the percentage data as this is not representative unless we know the raw numbers the percentages are generated from (which we do not) so we want to remove this. We also want to remove any other unnecessary information in the dataset. For example, there are a few rows with missing values so have been filled with N/A which we need to remove. These missing values are simply from it containing only text in the raw dataset.
 
-```{r cleaning the data, warning=FALSE, message = FALSE}
+```{r Cleaning the data, warning = FALSE, message = FALSE}
 
 # First, we need to remove all of the N/A data in the dataset
+
 filtered_data <- data %>% drop_na() 
 
 # To check this has removed all N/A values we use the following function
+
 if (sum(is.na(filtered_data)) == 0) {
   print("No missing values")
 } else {
@@ -69,15 +87,19 @@ if (sum(is.na(filtered_data)) == 0) {
 
 # Now we want to remove the percentages data
 # The percentage data begins on row 28 in the dataset so we only want to include rows 1 to 27
+
 filtered_data <- filtered_data[1:27, ]
 
-# View the filtered date
+# View the first few rows of the filtered dataset
+
 head(filtered_data)
 
 # View column names
+
 names(filtered_data)
 
 # Rename a couple of the column names to remove the 'note...' as this is only relevant when viewing the data in Excel
+
 filtered_data <- filtered_data %>% rename("Age of Suspect" = "Age of suspect [note 65]", "Apr 2020 to Mar 2021" = "Apr 2020 to Mar 2021 [note 66]") 
 
 # View column names again to see if the changes have been made
@@ -90,7 +112,7 @@ We remove the N/A values before specifying which rows to keep as the first row o
 # Data Preparation
 As the dataset currently has a lot of columns, to be able to visualise it we need to transform it from a wide format to a long format. This is done using the 'pivot_longer' function.
 
-```{r}
+```{r Elongate the dataset, warning = FALSE, message = FALSE}
 data_long <- pivot_longer(data = filtered_data, 
                           names_to = "Year",
                           values_to = "Frequency",
@@ -99,97 +121,158 @@ data_long <- pivot_longer(data = filtered_data,
 head(data_long)
 ```
 
-```{r Make Year column better to visualise}
-# Create a string which has just th eyear range rather than month and year so it is easier to visualise on a graph
-
-
-```
-
-```{r Create a final datafram for the graph}
+The final part of the data preparation is to create a final dataframe we can use in the visualisation which contains only the columns and rows we are going to use.
+```{r Create a final dataframe for the graph, warning = FALSE, message = FALSE}
 # Create a new dataframe to use in the visualisation
 # Remove the rows which display both male and female so we can compare just male and female
 # And include all ages 
-sex_data <- data_long %>% filter(`Sex of Suspect` %in% c("Male", "Female") &
+
+final_data <- data_long %>% filter(`Sex of Suspect` %in% c("Male", "Female") &
                                   `Age of Suspect` == "Total [note 66]")
 
-sex_data <- sex_data %>%
-  mutate(
-    simple_years = paste(str_sub(Year, 5, 8), str_sub(Year, 16, 20), sep = "-") # Directly create simple_years
-  )
+# The year data runs April to March (the UK tax year)
+# To make visualisation on a graph easier we need to remove the month and just keep the year 
+# Extract the start and end years using a string function
+# Create a `Simple Years` column to plot the year range on a bar chart
+# Then create a Mid_Year column to be able to plot the tax year (e.g. 2012-2013) on an animated plot (needed for later) as this has to be numeric for the animation to work (`Simple Years` is a character column)
 
-sex_data$'Sex of Suspect' <- factor(sex_data$'Sex of Suspect', levels = c("Female", "Male"))
-levels(sex_data$'Sex of Suspect')
+final_data <- final_data %>%
+  mutate(Start_Year = as.numeric(str_extract(Year, "(?<=Apr )[0-9]{4}")),  
+    End_Year = as.numeric(str_extract(Year, "(?<=Mar )[0-9]{4}")),  
+    Mid_Year = (Start_Year + End_Year) / 2,
+    `Simple Years` = paste(Start_Year, End_Year, sep = "-"))
 
-head(sex_data)
+# Check the Mid_Year column is numeric as this is required for the animated visualisation
+
+final_data$Mid_Year <- as.numeric(final_data$Mid_Year)
+
+# Change the `Sex of Suspect` column from character to factor vector so we can categorise by male and female (needed for the visualisation)
+
+final_data$'Sex of Suspect' <- factor(final_data$'Sex of Suspect', levels = c("Female", "Male"))
+levels(final_data$'Sex of Suspect')
+
+# Check the first few rows of the final dataset
+head(final_data)
 ```
 
-# Potential Graph Functions
+# Visualising the Data
+I initially visualised the data as a bar chart with the male and female frequencies in adjacent bars. This bar chart made it difficult to determine the numbers of female suspects since they are so small compared to the male suspects. 
 
-```{r}
-
-# Stacked barplot:
-sex_data$Frequency <- as.numeric(sex_data$Frequency)
-p <- ggplot(sex_data, aes(x=simple_years, y=Frequency, fill = `Sex of Suspect`)) +
-  geom_bar(stat = "identity", colour='black', width = 0.75) +
-  scale_y_continuous(expand = c(0,0), limits = c(0, 550)) +
-  scale_x_discrete() + 
-  scale_fill_manual(values = c("Male" = "#7A67EE", "Female" = "#FF6A6A")) +
-  ggtitle("Number of Homicide Suspects Per Year") + 
-  theme(
-    panel.background = element_rect(fill = "#BFD5E3", colour = "#6D9EC1", linetype = "solid"),
-    axis.text.x = element_text(angle = 45, hjust = 1, family = "sans"),
-    axis.text.y = element_text(family = "sans"),  # Set font for y-axis labels
-    axis.title.x = element_text(size = 14, face = "plain", family = "sans"),  # Font for x-axis title
-    axis.title.y = element_text(size = 14, face = "plain", family = "sans"),  # Font for y-axis title
-    legend.title = element_text(size = 14, face = "bold", family = "sans"),  # Font for legend title
-    legend.background = element_rect(fill = "#BFD5E3",linetype = 1, colour = "black", linewidth = 1),
-    legend.text = element_text(size = 12, family = "sans"),  # Font for legend labels
-    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
-    panel.border = element_rect(colour = "black", fill = NA, linewidth = 2)
-  ) +
-
-  labs(
-    x = "Year",        # Label for x-axis
-    y = "Number of Suspects",   # Label for y-axis
-    fill = "Sex of Suspect")  # Label for the legend
-    title = "Number of Homicide Suspects Per Year"
-
-print(p)
-```
-```{r}
-# My barplot - side by side bar plot:
-sex_data$Frequency <- as.numeric(sex_data$Frequency)
-p <- ggplot(sex_data, aes(x=simple_years, y=Frequency, fill = `Sex of Suspect`)) +
+```{r Create a bar chart, warning = FALSE, message = FALSE}
+# Initial visualisation
+# Create a bar chart
+final_data$Frequency <- as.numeric(final_data$Frequency)
+initial_p <- ggplot(final_data, aes(x=`Simple Years`, y=Frequency, fill = `Sex of Suspect`)) +
   geom_bar(stat = "identity", position = "dodge", colour='black', width = 0.75) +
   scale_y_continuous(expand = c(0,0), limits = c(0, 550)) +
   scale_x_discrete() + 
   scale_fill_manual(values = c("Male" = "#7A67EE", "Female" = "#FF6A6A")) +
   ggtitle("Number of Homicide Suspects Per Year") + 
   theme(
+# Set font and colours for background, titles and legends
     panel.background = element_rect(fill = "#BFD5E3", colour = "#6D9EC1", linetype = "solid"),
     axis.text.x = element_text(angle = 45, hjust = 1, family = "sans"),
-    axis.text.y = element_text(family = "sans"),  # Set font for y-axis labels
-    axis.title.x = element_text(size = 14, face = "plain", family = "sans"),  # Font for x-axis title
-    axis.title.y = element_text(size = 14, face = "plain", family = "sans"),  # Font for y-axis title
-    legend.title = element_text(size = 14, face = "bold", family = "sans"),  # Font for legend title
+    axis.text.y = element_text(family = "sans"),  
+    axis.title.x = element_text(size = 14, face = "plain", family = "sans"),  
+    axis.title.y = element_text(size = 14, face = "plain", family = "sans"), 
+    legend.title = element_text(size = 14, face = "bold", family = "sans"),  
     legend.background = element_rect(fill = "#BFD5E3",linetype = 1, colour = "black", linewidth = 1),
-    legend.text = element_text(size = 12, family = "sans"),  # Font for legend labels
+    legend.text = element_text(size = 12, family = "sans"),  
     plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 2)
   ) +
 
   labs(
-    x = "Year",        # Label for x-axis
-    y = "Number of Suspects",   # Label for y-axis
-    fill = "Sex of Suspect")  # Label for the legend
+    x = "Year",       
+    y = "Number of Suspects",   
+    fill = "Sex of Suspect")  
     title = "Number of Homicide Suspects Per Year"
 
-print(p)
+# View the bar chart
+    
+plot(initial_p)
+
+# Save the bar chart
+
+ggsave(here("Visualisations","initial_bar_chart.jpg"),height = 8, width = 13)
+
 ```
 
-# Visualising the Data
+Next, I plotted the data as a stacked bar chart. This was to aid visualisation of female suspects compared to male suspects as the amount is much smaller. 
+
+```{r Create a stacked bar chart, warning = FALSE, message = FALSE}
+# Stacked bar chart:
+
+final_data$Frequency <- as.numeric(final_data$Frequency)
+p <- ggplot(final_data, aes(x=`Simple Years`, y=Frequency, fill = `Sex of Suspect`)) +
+  geom_bar(stat = "identity", colour='black', width = 0.75) +
+  scale_y_continuous(expand = c(0,0), limits = c(0, 600)) +
+  scale_x_discrete() + 
+  scale_fill_manual(values = c("Male" = "#7A67EE", "Female" = "#FF6A6A")) +
+  ggtitle("Number of Homicide Suspects Per Year") + 
+  theme(
+  # Set font and colours for background, titles and legends
+    aspect.ratio = 1/2,
+    panel.background = element_rect(fill = "#BFD5E3", colour = "#6D9EC1", linetype = "solid"),
+    axis.text.x = element_text(angle = 45, hjust = 1, family = "sans"),
+    axis.text.y = element_text(family = "sans"),  
+    axis.title.x = element_text(size = 14, face = "plain", family = "sans"),  
+    axis.title.y = element_text(size = 14, face = "plain", family = "sans"),  
+    legend.title = element_text(size = 14, face = "bold", family = "sans"),  
+    legend.background = element_rect(fill = "#BFD5E3",linetype = 1, colour = "black", linewidth = 1),
+    legend.text = element_text(size = 12, family = "sans"),  
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5, margin = margin(b = 10)),
+    plot.subtitle = element_text(size = 14, margin = margin(b = 10)),
+    panel.border = element_rect(colour = "black", fill = NA, linewidth = 2)
+  ) +
+
+  labs(
+    x = "Year Range",        
+    y = "Number of Suspects", 
+    fill = "Sex of Suspect",  
+    title = "Number of Homicide Suspects Per Year",
+    subtitle = "Source: Office for National Stataistics (ONS): 
+             Homicide in England and Wales: year ending March 2023.")
+
+# View the bar chart
+    
+plot(p)
+
+# Save the bar chart
+
+ggsave(here("Visualisations","bar_chart.jpg"),height = 8, width = 13)
+
+```
+
+To be able to visualise the progression of the homicide suspects over the years, I decided to animate the stacked bar chart. This is the plot I submitted for assessment.
+
+```{r Create an animated stacked bar plot, warning = FALSE, message = FALSE, results = FALSE} 
+
+# Create an animated plot transitioning through 'Mid_Year'
+# animated <- p + 
+  #transition_reveal(Mid_Year) +  
+  # ggtitle("Number of Homicide Suspects Over The Years")
+
+# Animate the plot 
+# animate(animated, width = 800, height = 600, fps = 10, duration = 12)
+
+# Save the animation as a GIF
+# animate(animated, renderer = gifski_renderer())
+
+# anim_save("homicide_animation.gif", animation = animated)
+
+# To be able to include the animated plot in the webpage, need to include the following:
 
 
+```
+
+# Conclusions
+This visualisation clearly shows the massive discrepancy between male and female suspects. There is a significantly higher amount of male suspects convicted of homicide than there are females. The stacked bar chart also displays a substantial drop in homicides in the 2022-2023 tax year compared to 2021-2022. Visualising these homicide trends are important to help understand trends in criminal behaviour and homicide, which can inform efforts to prevent and address violence to hopefully be able to reduce these numbers further.
+
+# Reflections
+In order to improve the animated stacked bar chart I would include the years in the title as the animation progresses (e.g. as the bar for 2012-2013 appears, the year range would appear in the title as "Number of Homicide Suspects by Year: ..."). I was unable to do this as the data used to create the animation needed to be numeric, however, the `Simple Years` column which includes the year range is a character vector so cannot be used for this. 
+
+To improve the visualisation of homicide numbers over the years, the different types of homicide the suspects were convicted of (e.g. manslaughter, infanticide) could also be displayed. This could provide further understanding of the trends in criminal behaviour and homicides over the years. 
 
 # References
 Office for National Statistics. (2024, February 08). *Homicide in England and Wales: year ending March 2023.* https://www.ons.gov.uk/peoplepopulationandcommunity/crimeandjustice/articles/homicideinenglandandwales/yearendingmarch2023 
