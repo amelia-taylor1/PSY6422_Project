@@ -274,6 +274,8 @@ if(knitr::is_html_output()){
 
 ![](./Visualisations/"animated_line_graph.gif")
 
+I faced some issues trying to upload this gif onto the webpage. So for fun, it is still included as it can still be viewed in the knitted html.
+
 # Conclusions
 This visualisation clearly shows the massive discrepancy between male and female suspects. Addressing the research question, there is a significantly higher amount of male suspects convicted of homicide than there are females. The line graph also displays a substantial drop in homicides in the 2022-2023 tax year compared to 2021-2022. Visualising these homicide trends are important to help understand trends in criminal behaviour and homicide, which can inform efforts to prevent and address violence to hopefully be able to reduce these numbers further.
 
