@@ -481,12 +481,13 @@ suspects compared to male suspects.</p>
 #Save the line graph in a wider image format so the subtitle doesn&#39;t get cut off
 ggsave(here(&quot;Visualisations&quot;, &quot;line_graph.png&quot;), plot = plot, width = 12, height = 8)</code></pre>
 </div>
-<div id="line-graph" class="section level4">
-<h4>Line graph</h4>
+<div id="improved-visualisation---line-graph" class="section level4">
+<h4>Improved Visualisation - Line Graph</h4>
 <p><img src="Visualisations/line_graph.png" /> ### Animated line graph
-- plot for assessment To be able to visualise the progression of the
-homicide suspects over the years, I decided to animate the line graph.
-This is the plot I submitted for assessment.</p>
+- plot for assessment</p>
+<p>To be able to visualise the progression of the homicide suspects over
+the years, I decided to animate the line graph. This is the plot I
+submitted for assessment.</p>
 <pre class="r"><code># Animate the plot - plot for assessment
 animated &lt;- plot + 
   geom_point() +
@@ -509,6 +510,10 @@ src="index_files/figure-html/Animate%20the%20plot-1.gif" /><!-- --></p>
 if(knitr::is_html_output()){
   anim_save(here(&quot;Visualisations&quot; , &quot;final_graph.gif&quot;), animated, renderer = gifski_renderer())
 }</code></pre>
+</div>
+<div id="visualisation-for-assesment---animated-line-graph"
+class="section level4">
+<h4>Visualisation for Assesment - Animated Line Graph</h4>
 <p><img src="Visualisations/final_graph.gif" /> # Conclusions This
 visualisation clearly shows the massive discrepancy between male and
 female suspects. Addressing the research question, there is a
