@@ -3,6 +3,11 @@ title: "Visualising Homicide Convictions by Sex: Male vs. Female Suspects (2012-
 author: 'Registration number: 240188795'
 date: "2024-12-10"
 output:
+  pdf_document:
+      toc: true
+      toc_depth: 4
+      number_sections: true
+      latex_engine: xelatex
   html_document:
       css: custom.css
       self_contained: true
@@ -10,11 +15,6 @@ output:
       toc: yes
       toc_float: 
         collapsed: true
-  pdf_document:
-      toc: true
-      toc_depth: 4
-      number_sections: true
-      latex_engine: xelatex
 geometry: margin=1in
 header-includes:
   \usepackage{fvextra}
