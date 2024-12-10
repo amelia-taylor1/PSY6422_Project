@@ -162,7 +162,7 @@ head(final_data)
 ```
 
 # Visualising the Data
-I initially visualised the data as a stacked bar chart with the female frequency bar on top of the male frequency bar. This bar chart made it difficult to determine the numbers of female suspects since they are so small compared to the male suspects. 
+Initially, I visualised the data as a stacked bar chart with the female frequency bar on top of the male frequency bar. This bar chart made it difficult to determine the numbers of female suspects since they are so small compared to the male suspects. 
 
 ```{r Create a stacked bar chart, warning = FALSE, message = FALSE}
 # Stacked bar chart:
