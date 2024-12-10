@@ -3,6 +3,11 @@ title: "Visualising Homicide Convictions by Sex: Male vs. Female Suspects (2012-
 author: 'Registration number: 240188795'
 date: "2024-12-10"
 output:
+  pdf_document:
+      toc: true
+      toc_depth: 4
+      number_sections: true
+      latex_engine: xelatex
   html_document:
       css: custom.css
       self_contained: false
@@ -10,11 +15,6 @@ output:
       toc: yes
       toc_float: 
         collapsed: true
-  pdf_document:
-      toc: true
-      toc_depth: 4
-      number_sections: true
-      latex_engine: xelatex
 geometry: margin=1in
 header-includes:
   \usepackage{fvextra}
@@ -199,11 +199,12 @@ p <- ggplot(final_data, aes(x=`Simple Years`, y=Frequency, fill = `Sex of Suspec
 
 # View the bar chart
 print(p)
-
+dir.create(here("Visualisations"), showWarnings = FALSE, recursive = TRUE)
 # Save the bar chart
 plot_file <- here("Visualisations", "bar_chart.png")
 ggsave(filename = plot_file, plot = p, device = "png", bg = "white", width = 8, height = 6, units = "in")
 ```
+
 #### Initial Visualisation
 
 The above function was used to include the graphs in the published GitHub webpage.
@@ -246,8 +247,8 @@ plot <- ggplot(final_data, aes(x=`Simple Years`, y=Frequency, color = `Sex of Su
 print(plot)
 
 #Save the line graph in a wider image format so the subtitle doesn't get cut off
-plot_file <- here("Visualisations", "viz240188795.png")
-ggsave(filename = plot_file, plot = plot, device = "png", width = 8, height = 6, units = "in")
+second_plot <- here("Visualisations", "viz240188795.png")
+ggsave(filename = second_plot, plot = plot, device = "png", width = 8, height = 6, units = "in")
 ```
 
 #### Improved Visualisation - Line Graph
@@ -277,6 +278,9 @@ if(knitr::is_html_output()){
 # Not necessary but included to see the progression over the years
 if(knitr::is_html_output()){
  anim_save(here("Visualisations" , "animated_line_graph.gif"), animated, renderer = gifski_renderer())
+}
+if(!knitr::is_latex_output()){
+  anim_save(here("Visualisations", "animated_line_graph.gif"), animated, renderer = gifski_renderer())
 }
 ```
 
