@@ -243,8 +243,10 @@ ggsave(here("Visualisations", "line_graph.png"), plot = plot, width = 12, height
 ```
 
 #### Improved Visualisation - Line Graph
+
 ![](./Visualisations/line_graph.png)
 ### Animated line graph - plot for assessment
+
 To be able to visualise the progression of the homicide suspects over the years, I decided to animate the line graph. This is the plot I submitted for assessment.
 
 ```{r Animate the plot, warning=FALSE, message=FALSE}
