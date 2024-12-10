@@ -3,18 +3,18 @@ title: "Visualising Homicide Convictions by Sex: Male vs. Female Suspects (2012-
 author: 'Registration number: 240188795'
 date: "2024-12-10"
 output:
+  html_document:
+      css: custom.css
+      self_contained: true
+      theme: cosmo
+      toc: yes
+      toc_float: 
+        collapsed: true
   pdf_document:
       toc: true
       toc_depth: 4
       number_sections: true
       latex_engine: xelatex
-  html_document:
-      css: custom.css
-      self_contained: false
-      theme: cosmo
-      toc: yes
-      toc_float: 
-        collapsed: true
 geometry: margin=1in
 header-includes:
   \usepackage{fvextra}
@@ -165,6 +165,8 @@ head(final_data)
 # Visualising the Data
 Initially, I visualised the data as a stacked bar chart with the female frequency bar on top of the male frequency bar. This bar chart made it difficult to determine the numbers of female suspects since they are so small compared to the male suspects. 
 
+#### Initial Visualisation
+
 ```{r Create a stacked bar chart, warning = FALSE, message = FALSE, fig.width=8, fig.height=6, echo=FALSE}
 
 # Stacked bar chart:
@@ -205,9 +207,8 @@ plot_file <- here("Visualisations", "bar_chart.png")
 ggsave(filename = plot_file, plot = p, device = "png", bg = "white", width = 8, height = 6, units = "in")
 ```
 
-#### Initial Visualisation
-
-The above function was used to include the graphs in the published GitHub webpage.
+#### Improved Visualisation - Line Graph
+#### Plot for Assessment
 
 To aid visualisation, I then chose a line graph to look at female suspects compared to male suspects. This is the graph I submitted for assessment. 
 
@@ -251,12 +252,10 @@ second_plot <- here("Visualisations", "viz240188795.png")
 ggsave(filename = second_plot, plot = plot, device = "png", width = 8, height = 6, units = "in")
 ```
 
-#### Improved Visualisation - Line Graph
-#### Plot for Assessment
-
-To emphasise the time course of this data I animated the line graph so the points for both male and female would gradually reveal. 
-
+ 
 #### Animated Line Graph
+
+To emphasise the time course of this data I animated the line graph so the points for both male and female would gradually reveal.
 
 ```{r Animate the plot, warning=FALSE, message=FALSE, fig.width=8, fig.height=6, echo=FALSE}
 # Animate the plot - plot for assessment
@@ -283,7 +282,6 @@ if(!knitr::is_latex_output()){
   anim_save(here("Visualisations", "animated_line_graph.gif"), animated, renderer = gifski_renderer())
 }
 ```
-
 
 I faced some issues trying to upload this gif onto the webpage. So for fun, it is still included as it can still be viewed in the knitted html.
 
