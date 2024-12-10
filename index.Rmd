@@ -14,6 +14,7 @@ output:
       toc: true
       toc_depth: 4
       number_sections: true
+      latex_engine: xelatex
 geometry: margin=1in
 header-includes:
   \usepackage{fvextra}
@@ -164,7 +165,8 @@ head(final_data)
 # Visualising the Data
 Initially, I visualised the data as a stacked bar chart with the female frequency bar on top of the male frequency bar. This bar chart made it difficult to determine the numbers of female suspects since they are so small compared to the male suspects. 
 
-```{r Create a stacked bar chart, warning = FALSE, message = FALSE}
+```{r Create a stacked bar chart, warning = FALSE, message = FALSE, fig.width=8, fig.height=6, echo=FALSE}
+
 # Stacked bar chart:
 
 p <- ggplot(final_data, aes(x=`Simple Years`, y=Frequency, fill = `Sex of Suspect`)) +
@@ -195,16 +197,20 @@ p <- ggplot(final_data, aes(x=`Simple Years`, y=Frequency, fill = `Sex of Suspec
     title = "Number of Homicide Suspects Per Year",
     subtitle = "Source: Office for National Statistics (ONS):\nHomicide in England and Wales: year ending March 2023.")
 
+# View the bar chart
+print(p)
+
 # Save the bar chart
-ggsave(here("Visualisations", "bar_chart.png"), width = 12, height = 8)
+plot_file <- here("Visualisations", "bar_chart.png")
+ggsave(filename = plot_file, plot = p, device = "png", bg = "white", width = 8, height = 6, units = "in")
 ```
 #### Initial Visualisation
-![](./Visualisations/bar_chart.png)
+
 The above function was used to include the graphs in the published GitHub webpage.
 
 To aid visualisation, I then chose a line graph to look at female suspects compared to male suspects. This is the graph I submitted for assessment. 
 
-```{r Line graph, warning = FALSE, message = FALSE}
+```{r Line graph, warning = FALSE, message = FALSE, fig.width=8, fig.height=6, echo=FALSE}
 plot <- ggplot(final_data, aes(x=`Simple Years`, y=Frequency, color = `Sex of Suspect`, group = `Sex of Suspect`)) +
   geom_line(size = 0.75) +
   geom_point(size = 4, shape = 20) +
@@ -236,20 +242,22 @@ plot <- ggplot(final_data, aes(x=`Simple Years`, y=Frequency, color = `Sex of Su
     title = "Number of Homicide Suspects Per Year",
     subtitle = "Source: Office for National Statistics (ONS):\nHomicide in England and Wales: year ending March 2023.")
 
-   # axis,text.x = element_text(hjust = 1, vjust = 1, family = "sans"),
+# View the line graph
+print(plot)
 
 #Save the line graph in a wider image format so the subtitle doesn't get cut off
-ggsave(here("Visualisations", "viz240188795.png"), plot = plot, width = 12, height = 8)
+plot_file <- here("Visualisations", "viz240188795.png")
+ggsave(filename = plot_file, plot = plot, device = "png", width = 8, height = 6, units = "in")
 ```
 
 #### Improved Visualisation - Line Graph
 #### Plot for Assessment
-![](./Visualisations/viz240188795.png)
+
 To emphasise the time course of this data I animated the line graph so the points for both male and female would gradually reveal. 
 
 #### Animated Line Graph
 
-```{r Animate the plot, warning=FALSE, message=FALSE}
+```{r Animate the plot, warning=FALSE, message=FALSE, fig.width=8, fig.height=6, echo=FALSE}
 # Animate the plot - plot for assessment
 animated <- plot + 
   geom_point() +
@@ -272,7 +280,6 @@ if(knitr::is_html_output()){
 }
 ```
 
-![](./Visualisations/"animated_line_graph.gif")
 
 I faced some issues trying to upload this gif onto the webpage. So for fun, it is still included as it can still be viewed in the knitted html.
 

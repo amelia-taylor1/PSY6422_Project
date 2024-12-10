@@ -407,114 +407,26 @@ head(final_data)</code></pre>
 female frequency bar on top of the male frequency bar. This bar chart
 made it difficult to determine the numbers of female suspects since they
 are so small compared to the male suspects.</p>
-<pre class="r"><code># Stacked bar chart:
-
-p &lt;- ggplot(final_data, aes(x=`Simple Years`, y=Frequency, fill = `Sex of Suspect`)) +
-  geom_bar(stat = &quot;identity&quot;, colour=&#39;black&#39;, width = 0.75) +
-  scale_y_continuous(expand = c(0,0), limits = c(0, 600)) +
-  scale_x_discrete() + 
-  scale_fill_manual(values = c(&quot;Male&quot; = &quot;#7A67EE&quot;, &quot;Female&quot; = &quot;#FF6A6A&quot;)) +
-  ggtitle(&quot;Number of Homicide Suspects Per Year&quot;) + 
-  theme(
-  # Set font and colours for background, titles and legends
-    aspect.ratio = 1/2,
-    panel.background = element_rect(fill = &quot;#BFD5E3&quot;, colour = &quot;#6D9EC1&quot;, linetype = &quot;solid&quot;),
-    axis.text.x = element_text(angle = 45, hjust = 1, family = &quot;sans&quot;),
-    axis.text.y = element_text(family = &quot;sans&quot;),  
-    axis.title.x = element_text(size = 14, face = &quot;plain&quot;, family = &quot;sans&quot;),  
-    axis.title.y = element_text(size = 14, face = &quot;plain&quot;, family = &quot;sans&quot;),  
-    legend.title = element_text(size = 14, face = &quot;bold&quot;, family = &quot;sans&quot;),  
-    legend.background = element_rect(fill = &quot;#BFD5E3&quot;,linetype = 1, colour = &quot;black&quot;, linewidth = 1),
-    legend.text = element_text(size = 12, family = &quot;sans&quot;),  
-    plot.title = element_text(size = 18, face = &quot;bold&quot;, hjust = 0.5, margin = margin(b = 10)),
-    plot.subtitle = element_text(size = 14, margin = margin(b = 10)),
-    panel.border = element_rect(colour = &quot;black&quot;, fill = NA, linewidth = 2)
-  ) +
-  labs(
-    x = &quot;Year Range&quot;,        
-    y = &quot;Number of Suspects&quot;, 
-    fill = &quot;Sex of Suspect&quot;,  
-    title = &quot;Number of Homicide Suspects Per Year&quot;,
-    subtitle = &quot;Source: Office for National Statistics (ONS):\nHomicide in England and Wales: year ending March 2023.&quot;)
-
-# Save the bar chart
-ggsave(here(&quot;Visualisations&quot;, &quot;bar_chart.png&quot;), width = 12, height = 8)</code></pre>
-<div id="initial-visualisation" class="section level4">
-<h4>Initial Visualisation</h4>
-<p><img src="Visualisations/bar_chart.png" /> The above function was
-used to include the graphs in the published GitHub webpage.</p>
+<p><img src="index_files/figure-html/Create%20a%20stacked%20bar%20chart-1.png" width="768" />
+#### Initial Visualisation</p>
+<p>The above function was used to include the graphs in the published
+GitHub webpage.</p>
 <p>To aid visualisation, I then chose a line graph to look at female
 suspects compared to male suspects. This is the graph I submitted for
 assessment.</p>
-<pre class="r"><code>plot &lt;- ggplot(final_data, aes(x=`Simple Years`, y=Frequency, color = `Sex of Suspect`, group = `Sex of Suspect`)) +
-  geom_line(size = 0.75) +
-  geom_point(size = 4, shape = 20) +
-  scale_y_continuous( # change what the gridlines increase by to aid visualisation
-    breaks = seq(0, 525, by = 100),
-    minor_breaks = seq(0, 525, by = 25)
-  ) +
-  scale_x_discrete() + 
-  scale_color_manual(values = c(&quot;Male&quot; = &quot;#2A52BF&quot;, &quot;Female&quot; = &quot;#AE4371&quot;)) +
-  ggtitle(&quot;Number of Homicide Suspects Per Year&quot;) + 
-  theme(
-  # Set font and colours for background, titles and legends
-    panel.background = element_rect(fill = &quot;grey92&quot;, colour = &quot;#6D9EC1&quot;, linetype = &quot;solid&quot;), # change background colour to better visualise the points on the chart
-    axis.text.x = element_text(angle = 45, hjust = 1, family = &quot;sans&quot;),
-    axis.text.y = element_text(family = &quot;sans&quot;),  
-    axis.title.x = element_text(size = 14, face = &quot;plain&quot;, family = &quot;sans&quot;),  
-    axis.title.y = element_text(size = 14, face = &quot;plain&quot;, family = &quot;sans&quot;),  
-    legend.title = element_text(size = 14, face = &quot;bold&quot;, family = &quot;sans&quot;),  
-    legend.background = element_rect(fill = &quot;grey92&quot;,linetype = 1, colour = &quot;black&quot;, linewidth = 1),
-    legend.text = element_text(size = 12, family = &quot;sans&quot;),  
-    plot.title = element_text(size = 18, face = &quot;bold&quot;, hjust = 0.5, margin = margin(b = 10)),
-    plot.subtitle = element_text(size = 14, margin = margin(b = 10)),
-    panel.border = element_rect(colour = &quot;black&quot;, fill = NA, linewidth = 2)
-  ) +
-  labs(
-    x = &quot;Year Range&quot;,        
-    y = &quot;Number of Suspects&quot;, 
-    color = &quot;Sex of Suspect&quot;,  
-    title = &quot;Number of Homicide Suspects Per Year&quot;,
-    subtitle = &quot;Source: Office for National Statistics (ONS):\nHomicide in England and Wales: year ending March 2023.&quot;)
-
-   # axis,text.x = element_text(hjust = 1, vjust = 1, family = &quot;sans&quot;),
-
-#Save the line graph in a wider image format so the subtitle doesn&#39;t get cut off
-ggsave(here(&quot;Visualisations&quot;, &quot;viz240188795.png&quot;), plot = plot, width = 12, height = 8)</code></pre>
-</div>
+<p><img src="index_files/figure-html/Line%20graph-1.png" width="768" /></p>
 <div id="improved-visualisation---line-graph" class="section level4">
 <h4>Improved Visualisation - Line Graph</h4>
 </div>
 <div id="plot-for-assessment" class="section level4">
 <h4>Plot for Assessment</h4>
-<p><img src="Visualisations/viz240188795.png" /> To emphasise the time
-course of this data I animated the line graph so the points for both
-male and female would gradually reveal.</p>
+<p>To emphasise the time course of this data I animated the line graph
+so the points for both male and female would gradually reveal.</p>
 </div>
 <div id="animated-line-graph" class="section level4">
 <h4>Animated Line Graph</h4>
-<pre class="r"><code># Animate the plot - plot for assessment
-animated &lt;- plot + 
-  geom_point() +
-  transition_manual(Mid_Year, cumulative = TRUE) +
-  labs(
-    title = &quot;Number of Homicide Suspects Over the Years&quot;,
-    subtitle = &quot;Source: Office for National Statistics (ONS):\nHomicide in England and Wales: year ending March 2023.&quot;
-  ) +
-  theme(
-    plot.title = element_text(size = 18, face = &quot;bold&quot;, hjust = 0.5, margin = margin(b = 10)),
-    plot.subtitle = element_text(size = 14, margin = margin(b = 10, t = 10)))
-
-if(knitr::is_html_output()){
-  animated
-}</code></pre>
 <p><img
 src="index_files/figure-html/Animate%20the%20plot-1.gif" /><!-- --></p>
-<pre class="r"><code># Not necessary but included to see the progression over the years
-if(knitr::is_html_output()){
- anim_save(here(&quot;Visualisations&quot; , &quot;animated_line_graph.gif&quot;), animated, renderer = gifski_renderer())
-}</code></pre>
-<p><img src="./Visualisations/%22animated_line_graph.gif%22" /></p>
 <p>I faced some issues trying to upload this gif onto the webpage. So
 for fun, it is still included as it can still be viewed in the knitted
 html.</p>
