@@ -437,18 +437,11 @@ p &lt;- ggplot(final_data, aes(x=`Simple Years`, y=Frequency, fill = `Sex of Sus
     title = &quot;Number of Homicide Suspects Per Year&quot;,
     subtitle = &quot;Source: Office for National Statistics (ONS):\nHomicide in England and Wales: year ending March 2023.&quot;)
 
-# View the bar chart
-plot(p)</code></pre>
-<p><img src="index_files/figure-html/Create%20a%20stacked%20bar%20chart-1.png" width="672" /></p>
-<pre class="r"><code># Save the bar chart
+# Save the bar chart
 ggsave(here(&quot;Visualisations&quot;, &quot;bar_chart.png&quot;), width = 12, height = 8)</code></pre>
-</div>
-<div id="include-the-plot-in-the-github-page" class="section level1">
-<h1>Include the plot in the github page</h1>
-<div class="float">
-<img src="Visualisations/bar_chart.png" alt="Bar chart" />
-<div class="figcaption">Bar chart</div>
-</div>
+<div id="initial-visualisation" class="section level4">
+<h4>Initial Visualisation</h4>
+<p><img src="Visualisations/bar_chart.png" /></p>
 <p>To aid visualisation, I then chose a line graph to look at female
 suspects compared to male suspects.</p>
 <pre class="r"><code>plot &lt;- ggplot(final_data, aes(x=`Simple Years`, y=Frequency, color = `Sex of Suspect`, group = `Sex of Suspect`)) +
@@ -483,19 +476,16 @@ suspects compared to male suspects.</p>
     subtitle = &quot;Source: Office for National Statistics (ONS):\nHomicide in England and Wales: year ending March 2023.&quot;)
 
    # axis,text.x = element_text(hjust = 1, vjust = 1, family = &quot;sans&quot;),
-   
 
-# View the line graph
-print(plot)</code></pre>
-<p><img src="index_files/figure-html/Line%20graph-1.png" width="672" /></p>
-<pre class="r"><code>#Save the line graph in a wider image format so the subtitle doesn&#39;t get cut off
+#Save the line graph in a wider image format so the subtitle doesn&#39;t get cut off
 ggsave(here(&quot;Visualisations&quot;, &quot;line_graph.png&quot;), plot = plot, width = 12, height = 8)</code></pre>
-<div id="animated-line-graph---plot-for-assessment"
-class="section level3">
-<h3>Animated line graph - plot for assessment</h3>
-<p>To be able to visualise the progression of the homicide suspects over
-the years, I decided to animate the line graph. This is the plot I
-submitted for assessment.</p>
+</div>
+<div id="line-graph" class="section level4">
+<h4>Line graph</h4>
+<p><img src="Visualisations/line_graph.png" /> ### Animated line graph
+- plot for assessment To be able to visualise the progression of the
+homicide suspects over the years, I decided to animate the line graph.
+This is the plot I submitted for assessment.</p>
 <pre class="r"><code># Animate the plot - plot for assessment
 animated &lt;- plot + 
   geom_point() +
@@ -518,12 +508,9 @@ src="index_files/figure-html/Animate%20the%20plot-1.gif" /><!-- --></p>
 if(knitr::is_html_output()){
   anim_save(here(&quot;Visualisations&quot; , &quot;final_graph.gif&quot;), animated, renderer = gifski_renderer())
 }</code></pre>
-</div>
-</div>
-<div id="conclusions" class="section level1">
-<h1>Conclusions</h1>
-<p>This visualisation clearly shows the massive discrepancy between male
-and female suspects. Addressing the research question, there is a
+<p><img src="Visualisations/final_graph.gif" /> # Conclusions This
+visualisation clearly shows the massive discrepancy between male and
+female suspects. Addressing the research question, there is a
 significantly higher amount of male suspects convicted of homicide than
 there are females. The line graph also displays a substantial drop in
 homicides in the 2022-2023 tax year compared to 2021-2022. Visualising
@@ -531,6 +518,7 @@ these homicide trends are important to help understand trends in
 criminal behaviour and homicide, which can inform efforts to prevent and
 address violence to hopefully be able to reduce these numbers
 further.</p>
+</div>
 </div>
 <div id="reflections" class="section level1">
 <h1>Reflections</h1>
