@@ -1,5 +1,5 @@
 ---
-title: "Visualizing Homicide Convictions by Sex: Male vs. Female Suspects (2012-2023)"
+title: "Visualising Homicide Convictions by Sex: Male vs. Female Suspects (2012-2023)"
 author: 'Registration number: 240188795'
 date: "2024-12-10"
 output:
@@ -13,11 +13,20 @@ output:
       toc: yes
       toc_float: 
         collapsed: true
+geometry: margin=1in
+header-includes:
+  \usepackage{fvextra}
+  \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
 ---
 
 ```{r setup, include=FALSE, messages=FALSE, results=FALSE}
-knitr::opts_chunk$set(echo = TRUE) #to avoid error message: setting CRAN without a mirror
-options(repos = c(CRAN = "https://cran.rstudio.com/")) 
+knitr::opts_chunk$set(
+  echo = TRUE,
+  tidy = TRUE,
+  tidy.opts = list(width.cutoff = 60),
+  highlight.options = list(linewrap = TRUE)
+) 
+options(repos = c(CRAN = "https://cran.rstudio.com/")) #to avoid error message: setting CRAN without a mirror
 #repos specifies the repository 
 # this URL is the designated URL for CRAN 
 options(device = "png")
@@ -266,8 +275,6 @@ This visualisation clearly shows the massive discrepancy between male and female
 
 # Reflections
 If I had more time, to improve the animated line graph I would include the years in the title as the animation progresses (e.g. as the bar for 2012-2013 appears, the year range would appear in the title as "Number of Homicide Suspects by Year: ..."). I was unable to do this as the data used to create the animation needed to be numeric, however, the `Simple Years` column which includes the year range is a character vector so cannot be used for this. 
-
-Additionally, if I had more time, I would also slant the x axis labels in the animated line graph as they are in the stacked bar chart. I included the 'angle = 45' initially in the code for the animated line graph but it would not work.
 
 To improve the visualisation of homicide numbers over the years, the different types of homicide the suspects were convicted of (e.g. manslaughter, infanticide) could also be displayed. This could provide further understanding of the trends in criminal behaviour and homicides over the years. 
 
