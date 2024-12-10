@@ -200,6 +200,7 @@ ggsave(here("Visualisations", "bar_chart.png"), width = 12, height = 8)
 ```
 #### Initial Visualisation
 ![](./Visualisations/bar_chart.png)
+The above function was used to include the graphs in the published GitHub webpage.
 
 To aid visualisation, I then chose a line graph to look at female suspects compared to male suspects. 
 
