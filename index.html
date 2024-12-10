@@ -63,6 +63,7 @@ if (window.hljs) {
 
 
 
+<link rel="stylesheet" href="custom.css" type="text/css" />
 
 
 
@@ -280,7 +281,7 @@ folder for this project. As the data is an Excel Workbook with a lot of
 sheets, I only wanted to upload and analyse a particular sheet. The one
 I chose was ‘Worksheet_31’ as this includes suspects for all offences
 initially ruled a homicide between April 2012 and March 2023.</p>
-<pre class="r"><code># Need to install and load the necessary packages
+<pre class="r"><code># Need to install and load the necessary packages for this whole project
 
 install.packages(&quot;here&quot;)
 install.packages(&quot;tidyverse&quot;)
@@ -506,6 +507,10 @@ if(knitr::is_html_output()){
 }</code></pre>
 <p><img
 src="index_files/figure-html/Animate%20the%20plot-1.gif" /><!-- --></p>
+<pre class="r"><code># Save the plot as a gif for assessment
+if(knitr::is_html_output()){
+  anim_save(here(&quot;Visualisations&quot; , &quot;final_graph.gif&quot;), animated, renderer = gifski_renderer())
+}</code></pre>
 </div>
 </div>
 <div id="conclusions" class="section level1">

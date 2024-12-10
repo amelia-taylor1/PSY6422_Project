@@ -3,16 +3,17 @@ title: "Visualising Homicide Convictions by Sex: Male vs. Female Suspects (2012-
 author: 'Registration number: 240188795'
 date: "2024-12-10"
 output:
-  pdf_document:
-      toc: true
-      toc_depth: 4
-      number_sections: true
   html_document:
+      css: custom.css
       self_contained: false
       theme: cosmo
       toc: yes
       toc_float: 
         collapsed: true
+  pdf_document:
+      toc: true
+      toc_depth: 4
+      number_sections: true
 geometry: margin=1in
 header-includes:
   \usepackage{fvextra}
@@ -47,7 +48,7 @@ To upload the dataset into R, I used the 'here' function as this allows the code
 As the data is an Excel Workbook with a lot of sheets, I only wanted to upload and analyse a particular sheet. The one I chose was 'Worksheet_31' as this includes suspects for all offences initially ruled a homicide between April 2012 and March 2023. 
 
 ```{r Load the data, warning = FALSE, message = FALSE, results = FALSE}
-# Need to install and load the necessary packages
+# Need to install and load the necessary packages for this whole project
 
 install.packages("here")
 install.packages("tidyverse")
@@ -268,6 +269,10 @@ if(knitr::is_html_output()){
   animated
 }
 
+# Save the plot as a gif for assessment
+if(knitr::is_html_output()){
+  anim_save(here("Visualisations" , "final_graph.gif"), animated, renderer = gifski_renderer())
+}
 ```
 
 # Conclusions
