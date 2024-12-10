@@ -202,7 +202,7 @@ ggsave(here("Visualisations", "bar_chart.png"), width = 12, height = 8)
 ![](./Visualisations/bar_chart.png)
 The above function was used to include the graphs in the published GitHub webpage.
 
-To aid visualisation, I then chose a line graph to look at female suspects compared to male suspects. 
+To aid visualisation, I then chose a line graph to look at female suspects compared to male suspects. This is the graph I submitted for assessment. 
 
 ```{r Line graph, warning = FALSE, message = FALSE}
 plot <- ggplot(final_data, aes(x=`Simple Years`, y=Frequency, color = `Sex of Suspect`, group = `Sex of Suspect`)) +
@@ -239,12 +239,15 @@ plot <- ggplot(final_data, aes(x=`Simple Years`, y=Frequency, color = `Sex of Su
    # axis,text.x = element_text(hjust = 1, vjust = 1, family = "sans"),
 
 #Save the line graph in a wider image format so the subtitle doesn't get cut off
-ggsave(here("Visualisations", "line_graph.png"), plot = plot, width = 12, height = 8)
+ggsave(here("Visualisations", "viz240188795.png"), plot = plot, width = 12, height = 8)
 ```
 
 #### Improved Visualisation - Line Graph
-![](./Visualisations/line_graph.png)
-To be able to visualise the progression of the homicide suspects over the years, I decided to animate the line graph. This is the plot I submitted for assessment.
+#### Plot for Assessment
+![](./Visualisations/viz240188795.png)
+To emphasise the time course of this data I animated the line graph so the points for both male and female would gradually reveal. 
+
+#### Animated Line Graph
 
 ```{r Animate the plot, warning=FALSE, message=FALSE}
 # Animate the plot - plot for assessment
@@ -265,12 +268,13 @@ if(knitr::is_html_output()){
 }
 
 # Save the plot as a gif for assessment
+# Not necessary but included to see the progression over the years
 if(knitr::is_html_output()){
-  anim_save(here("Visualisations" , "final_graph.gif"), animated, renderer = gifski_renderer())
+  anim_save(here("Visualisations" , "animated_line_graph.gif"), animated, renderer = gifski_renderer())
 }
 ```
-#### Visualisation for Assesment - Animated Line Graph
-![](./Visualisations/final_graph.gif)
+
+![](./Visualisations/"animated_line_graph.gif")
 
 
 # Conclusions

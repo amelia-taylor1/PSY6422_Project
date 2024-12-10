@@ -444,7 +444,8 @@ ggsave(here(&quot;Visualisations&quot;, &quot;bar_chart.png&quot;), width = 12, 
 <p><img src="Visualisations/bar_chart.png" /> The above function was
 used to include the graphs in the published GitHub webpage.</p>
 <p>To aid visualisation, I then chose a line graph to look at female
-suspects compared to male suspects.</p>
+suspects compared to male suspects. This is the graph I submitted for
+assessment.</p>
 <pre class="r"><code>plot &lt;- ggplot(final_data, aes(x=`Simple Years`, y=Frequency, color = `Sex of Suspect`, group = `Sex of Suspect`)) +
   geom_line(size = 0.75) +
   geom_point(size = 4, shape = 20) +
@@ -479,13 +480,19 @@ suspects compared to male suspects.</p>
    # axis,text.x = element_text(hjust = 1, vjust = 1, family = &quot;sans&quot;),
 
 #Save the line graph in a wider image format so the subtitle doesn&#39;t get cut off
-ggsave(here(&quot;Visualisations&quot;, &quot;line_graph.png&quot;), plot = plot, width = 12, height = 8)</code></pre>
+ggsave(here(&quot;Visualisations&quot;, &quot;viz240188795.png&quot;), plot = plot, width = 12, height = 8)</code></pre>
 </div>
 <div id="improved-visualisation---line-graph" class="section level4">
 <h4>Improved Visualisation - Line Graph</h4>
-<p><img src="Visualisations/line_graph.png" /> To be able to visualise
-the progression of the homicide suspects over the years, I decided to
-animate the line graph. This is the plot I submitted for assessment.</p>
+</div>
+<div id="plot-for-assessment" class="section level4">
+<h4>Plot for Assessment</h4>
+<p><img src="Visualisations/viz240188795.png" /> To emphasise the time
+course of this data I animated the line graph so the points for both
+male and female would gradually reveal.</p>
+</div>
+<div id="animated-line-graph" class="section level4">
+<h4>Animated Line Graph</h4>
 <pre class="r"><code># Animate the plot - plot for assessment
 animated &lt;- plot + 
   geom_point() +
@@ -505,14 +512,11 @@ if(knitr::is_html_output()){
 <p><img
 src="index_files/figure-html/Animate%20the%20plot-1.gif" /><!-- --></p>
 <pre class="r"><code># Save the plot as a gif for assessment
+# Not necessary but included to see the progression over the years
 if(knitr::is_html_output()){
-  anim_save(here(&quot;Visualisations&quot; , &quot;final_graph.gif&quot;), animated, renderer = gifski_renderer())
+  anim_save(here(&quot;Visualisations&quot; , &quot;animated_line_graph.gif&quot;), animated, renderer = gifski_renderer())
 }</code></pre>
-</div>
-<div id="visualisation-for-assesment---animated-line-graph"
-class="section level4">
-<h4>Visualisation for Assesment - Animated Line Graph</h4>
-<p><img src="Visualisations/final_graph.gif" /></p>
+<p><img src="./Visualisations/%22animated_line_graph.gif%22" /></p>
 </div>
 </div>
 <div id="conclusions" class="section level1">
