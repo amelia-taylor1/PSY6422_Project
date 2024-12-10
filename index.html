@@ -505,17 +505,15 @@ animated &lt;- plot +
     plot.title = element_text(size = 18, face = &quot;bold&quot;, hjust = 0.5, margin = margin(b = 10)),
     plot.subtitle = element_text(size = 14, margin = margin(b = 10, t = 10)))
 
-animated</code></pre>
+if(knitr::is_html_output()){
+  animated
+}</code></pre>
 <p><img
 src="index_files/figure-html/Animate%20the%20plot-1.gif" /><!-- --></p>
-<pre class="r"><code>#if(knitr::is_html_output()){
- # animated
-#}
-
-# Not necessary but included to see the progression over the years
-#if(knitr::is_html_output()){
- # anim_save(here(&quot;Visualisations&quot; , &quot;animated_line_graph.gif&quot;), animated, renderer = gifski_renderer())
-# }</code></pre>
+<pre class="r"><code># Not necessary but included to see the progression over the years
+if(knitr::is_html_output()){
+ anim_save(here(&quot;Visualisations&quot; , &quot;animated_line_graph.gif&quot;), animated, renderer = gifski_renderer())
+}</code></pre>
 </div>
 </div>
 <div id="conclusions" class="section level1">
