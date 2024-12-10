@@ -243,10 +243,7 @@ ggsave(here("Visualisations", "line_graph.png"), plot = plot, width = 12, height
 ```
 
 #### Improved Visualisation - Line Graph
-
 ![](./Visualisations/line_graph.png)
-### Animated line graph - plot for assessment
-
 To be able to visualise the progression of the homicide suspects over the years, I decided to animate the line graph. This is the plot I submitted for assessment.
 
 ```{r Animate the plot, warning=FALSE, message=FALSE}
@@ -274,6 +271,7 @@ if(knitr::is_html_output()){
 ```
 #### Visualisation for Assesment - Animated Line Graph
 ![](./Visualisations/final_graph.gif)
+
 # Conclusions
 This visualisation clearly shows the massive discrepancy between male and female suspects. Addressing the research question, there is a significantly higher amount of male suspects convicted of homicide than there are females. The line graph also displays a substantial drop in homicides in the 2022-2023 tax year compared to 2021-2022. Visualising these homicide trends are important to help understand trends in criminal behaviour and homicide, which can inform efforts to prevent and address violence to hopefully be able to reduce these numbers further.
 
