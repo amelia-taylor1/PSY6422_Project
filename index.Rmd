@@ -26,7 +26,12 @@ knitr::opts_chunk$set(
   echo = TRUE,
   tidy = TRUE,
   tidy.opts = list(width.cutoff = 60),
-  highlight.options = list(linewrap = TRUE)
+  highlight.options = list(linewrap = TRUE),
+  fig.width = 8,
+  fig.height = 6,
+  fig.align = "center",
+  out.width = "80%",
+  fig.pos = "h"
 ) 
 options(repos = c(CRAN = "https://cran.rstudio.com/")) #to avoid error message: setting CRAN without a mirror
 #repos specifies the repository 
@@ -167,7 +172,7 @@ Initially, I visualised the data as a stacked bar chart with the female frequenc
 
 #### Initial Visualisation
 
-```{r Create a stacked bar chart, warning = FALSE, message = FALSE, fig.width=8, fig.height=6, echo=FALSE}
+```{r Create a stacked bar chart, warning = FALSE, message = FALSE, fig.width=8, fig.height=6}
 
 # Stacked bar chart:
 
@@ -211,7 +216,7 @@ ggsave(filename = plot_file, plot = p, device = "png", bg = "white", width = 8, 
 
 To aid visualisation, I then chose a line graph to look at female suspects compared to male suspects. This is the graph I submitted for assessment. 
 
-```{r Line graph, warning = FALSE, message = FALSE, fig.width=8, fig.height=6, echo=FALSE}
+```{r Line graph, warning = FALSE, message = FALSE, fig.width=8, fig.height=6}
 plot <- ggplot(final_data, aes(x=`Simple Years`, y=Frequency, color = `Sex of Suspect`, group = `Sex of Suspect`)) +
   geom_line(size = 0.75) +
   geom_point(size = 4, shape = 20) +
@@ -256,7 +261,7 @@ ggsave(filename = second_plot, plot = plot, device = "png", width = 8, height = 
 
 To emphasise the time course of this data I animated the line graph so the points for both male and female would gradually reveal.
 
-```{r Animate the plot, warning=FALSE, message=FALSE, fig.width=8, fig.height=6, echo=FALSE}
+```{r Animate the plot, warning=FALSE, message=FALSE, fig.width=8, fig.height=6}
 # Animate the plot - plot for assessment
 animated <- plot + 
   geom_point() +
